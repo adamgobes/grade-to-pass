@@ -3,6 +3,8 @@ module Main exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
+import Array exposing (..)
+import Tuple exposing (..)
 
 
 main =
@@ -14,17 +16,20 @@ main =
 
 
 type alias Percentages =
-    ( Int, Int )
+    { weight : Int
+    , percentage : Int
+    }
 
 
 type alias Model =
-    { components : Int
+    { numComponents : Int
+    , components : Array Percentages
     }
 
 
 model : Model
 model =
-    Model 0
+    Model 0 empty
 
 
 
@@ -36,14 +41,20 @@ type Msg
     | ComponentDec
 
 
+
+-- | ComponentWeight String Int
+-- | ComponentPercentage String Int
+
+
 update : Msg -> Model -> Model
 update msg model_ =
     case msg of
+        -- increment numComponents integer and add empty record to components array
         ComponentInc ->
-            { model_ | components = model_.components + 1 }
+            { model_ | numComponents = model_.numComponents + 1, components = append (fromList [ { weight = 0, percentage = 0 } ]) model_.components }
 
         ComponentDec ->
-            { model_ | components = model_.components - 1 }
+            { model_ | numComponents = model_.numComponents - 1, components = slice 0 (model_.numComponents - 1) model_.components }
 
 
 
@@ -61,8 +72,21 @@ view model_ =
 
 renderComponents : Model -> Html Msg
 renderComponents model_ =
+    -- create list of tuples [(index, list html msg)]
     let
         inputs =
-            List.repeat model_.components (div [] [ input [ type_ "number" ] [], input [ type_ "number" ] [] ])
+            List.repeat model_.numComponents ([ input [ type_ "number" ] [], input [ type_ "number" ] [] ])
     in
-        div [] inputs
+        let
+            tupledList =
+                List.indexedMap (,) inputs
+        in
+            let
+                addIds tuple =
+                    div [] [ input [ type_ "number" ] [], input [ type_ "number" ] [] ]
+            in
+                let
+                    inputsWithIds =
+                        List.map addIds tupledList
+                in
+                    div [] inputsWithIds
