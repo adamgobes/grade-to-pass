@@ -5,10 +5,20 @@ import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Array exposing (..)
 import Tuple exposing (..)
+import Material
+import Material.Scheme
+import Material.Button as Button
+import Material.Options exposing (css)
 
 
+main : Program Never Model Msg
 main =
-    Html.beginnerProgram { model = model, view = view, update = update }
+    Html.program
+        { init = ( model, Cmd.none )
+        , view = view
+        , subscriptions = always Sub.none
+        , update = update
+        }
 
 
 
@@ -25,12 +35,17 @@ type alias Model =
     { numComponents : Int
     , components : Array Percentages
     , gradeToPass : Int
+    , mdl : Material.Model
     }
 
 
 model : Model
 model =
-    Model 0 empty 0
+    { numComponents = 0
+    , components = empty
+    , gradeToPass = 0
+    , mdl = Material.model
+    }
 
 
 
@@ -43,6 +58,7 @@ type Msg
     | ComponentWeight String String
     | ComponentPercentage String String
     | Submit
+    | Mdl (Material.Msg Msg)
 
 
 convertRawFloat : String -> Float
@@ -103,15 +119,15 @@ calculate model_ =
                     round ((toFloat pointsToPass / toFloat finalWeight) * 100)
 
 
-update : Msg -> Model -> Model
+update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model_ =
     case msg of
         -- increment numComponents integer and add empty record to components array
         ComponentInc ->
-            { model_ | numComponents = model_.numComponents + 1, components = push { weight = 0, percentage = 0 } model_.components }
+            ( { model_ | numComponents = model_.numComponents + 1, components = push { weight = 0, percentage = 0 } model_.components }, Cmd.none )
 
         ComponentDec ->
-            { model_ | numComponents = model_.numComponents - 1, components = slice 0 (model_.numComponents - 1) model_.components }
+            ( { model_ | numComponents = model_.numComponents - 1, components = slice 0 (model_.numComponents - 1) model_.components }, Cmd.none )
 
         ComponentWeight id_ weight ->
             let
@@ -122,7 +138,7 @@ update msg model_ =
                     updatedRecord =
                         { record | weight = convertRawFloat weight }
                 in
-                    { model_ | components = set (convertRawInt id_) updatedRecord model_.components }
+                    ( { model_ | components = set (convertRawInt id_) updatedRecord model_.components }, Cmd.none )
 
         ComponentPercentage id_ percentage ->
             let
@@ -133,25 +149,47 @@ update msg model_ =
                     updatedRecord =
                         { record | percentage = convertRawFloat percentage }
                 in
-                    { model_ | components = set (convertRawInt id_) updatedRecord model_.components }
+                    ( { model_ | components = set (convertRawInt id_) updatedRecord model_.components }, Cmd.none )
 
         Submit ->
-            { model_ | gradeToPass = calculate model_ }
+            ( { model_ | gradeToPass = calculate model_ }, Cmd.none )
+
+        Mdl msg_ ->
+            Material.update msg_ model_
 
 
 
 --VIEW
 
 
+type alias Mdl =
+    Material.Model
+
+
 view : Model -> Html Msg
 view model_ =
     div []
         [ renderComponents model_
-        , button [ onClick ComponentInc ] [ text "increment" ]
-        , button [ onClick ComponentDec ] [ text "decrement" ]
-        , button [ onClick Submit ] [ text "Calculate" ]
+        , Button.render Mdl
+            [ 0 ]
+            model_.mdl
+            [ Button.onClick ComponentInc
+            , css "margin" "0 24px"
+            ]
+            [ text "Add Component" ]
+        , Button.render Mdl
+            [ 1 ]
+            model_.mdl
+            [ Button.onClick ComponentDec ]
+            [ text "Remove Component" ]
+        , Button.render Mdl
+            [ 2 ]
+            model_.mdl
+            [ Button.onClick Submit ]
+            [ text "Calculate" ]
         , text (toString <| model_.gradeToPass)
         ]
+        |> Material.Scheme.top
 
 
 renderComponents : Model -> Html Msg
