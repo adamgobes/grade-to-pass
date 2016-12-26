@@ -8,6 +8,7 @@ import Tuple exposing (..)
 import Material
 import Material.Scheme
 import Material.Button as Button
+import Material.Textfield as Textfield
 import Material.Options exposing (css)
 
 
@@ -205,7 +206,12 @@ renderComponents model_ =
         in
             let
                 addIds tuple =
-                    div [] [ input [ type_ "number", onInput (ComponentWeight (toString <| (first tuple))) ] [], input [ type_ "number", onInput (ComponentPercentage (toString <| (first tuple))) ] [] ]
+                    div []
+                        [ Textfield.render Mdl [ 0 ] model_.mdl [ Textfield.onInput (ComponentWeight (toString <| (first tuple))) ], Textfield.render Mdl [ 0 ] model_.mdl [ Textfield.onInput (ComponentPercentage (toString <| (first tuple))) ] ]
+
+                -- div
+                -- []
+                -- [ input [ type_ "number", onInput (ComponentWeight (toString <| (first tuple))) ] [], input [ type_ "number", onInput (ComponentPercentage (toString <| (first tuple))) ] [] ]
             in
                 let
                     inputsWithIds =
