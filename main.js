@@ -15223,7 +15223,11 @@ var _user$project$Main$renderComponents = function (model_) {
 	var addIds = function (tuple) {
 		return A2(
 			_elm_lang$html$Html$div,
-			{ctor: '[]'},
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$class('wrapper'),
+				_1: {ctor: '[]'}
+			},
 			{
 				ctor: '::',
 				_0: A4(
@@ -15241,7 +15245,11 @@ var _user$project$Main$renderComponents = function (model_) {
 							_user$project$Main$ComponentWeight(
 								_elm_lang$core$Basics$toString(
 									_elm_lang$core$Tuple$first(tuple)))),
-						_1: {ctor: '[]'}
+						_1: {
+							ctor: '::',
+							_0: _MichaelCombs28$elm_mdl$Material_Textfield$label('Component'),
+							_1: {ctor: '[]'}
+						}
 					}),
 				_1: {
 					ctor: '::',
@@ -15250,7 +15258,7 @@ var _user$project$Main$renderComponents = function (model_) {
 						_user$project$Main$Mdl,
 						{
 							ctor: '::',
-							_0: 0,
+							_0: 1,
 							_1: {ctor: '[]'}
 						},
 						model_.mdl,
@@ -15260,7 +15268,11 @@ var _user$project$Main$renderComponents = function (model_) {
 								_user$project$Main$ComponentPercentage(
 									_elm_lang$core$Basics$toString(
 										_elm_lang$core$Tuple$first(tuple)))),
-							_1: {ctor: '[]'}
+							_1: {
+								ctor: '::',
+								_0: _MichaelCombs28$elm_mdl$Material_Textfield$label('Percentage'),
+								_1: {ctor: '[]'}
+							}
 						}),
 					_1: {ctor: '[]'}
 				}
@@ -15269,7 +15281,11 @@ var _user$project$Main$renderComponents = function (model_) {
 	var inputsWithIds = A2(_elm_lang$core$List$map, addIds, tupledList);
 	return A2(
 		_elm_lang$html$Html$div,
-		{ctor: '[]'},
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$class('input-div'),
+			_1: {ctor: '[]'}
+		},
 		inputsWithIds);
 };
 var _user$project$Main$ComponentDec = {ctor: 'ComponentDec'};
@@ -15278,85 +15294,100 @@ var _user$project$Main$view = function (model_) {
 	return _MichaelCombs28$elm_mdl$Material_Scheme$top(
 		A2(
 			_elm_lang$html$Html$div,
-			{ctor: '[]'},
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$class('main-div '),
+				_1: {ctor: '[]'}
+			},
 			{
 				ctor: '::',
 				_0: _user$project$Main$renderComponents(model_),
 				_1: {
 					ctor: '::',
-					_0: A5(
-						_MichaelCombs28$elm_mdl$Material_Button$render,
-						_user$project$Main$Mdl,
+					_0: A2(
+						_elm_lang$html$Html$div,
 						{
 							ctor: '::',
-							_0: 0,
+							_0: _elm_lang$html$Html_Attributes$class('buttons-div'),
 							_1: {ctor: '[]'}
 						},
-						model_.mdl,
 						{
-							ctor: '::',
-							_0: _MichaelCombs28$elm_mdl$Material_Button$onClick(_user$project$Main$ComponentInc),
-							_1: {
-								ctor: '::',
-								_0: A2(_MichaelCombs28$elm_mdl$Material_Options$css, 'margin', '0 24px'),
-								_1: {ctor: '[]'}
-							}
-						},
-						{
-							ctor: '::',
-							_0: _elm_lang$html$Html$text('Add Component'),
-							_1: {ctor: '[]'}
-						}),
-					_1: {
-						ctor: '::',
-						_0: A5(
-							_MichaelCombs28$elm_mdl$Material_Button$render,
-							_user$project$Main$Mdl,
-							{
-								ctor: '::',
-								_0: 1,
-								_1: {ctor: '[]'}
-							},
-							model_.mdl,
-							{
-								ctor: '::',
-								_0: _MichaelCombs28$elm_mdl$Material_Button$onClick(_user$project$Main$ComponentDec),
-								_1: {ctor: '[]'}
-							},
-							{
-								ctor: '::',
-								_0: _elm_lang$html$Html$text('Remove Component'),
-								_1: {ctor: '[]'}
-							}),
-						_1: {
 							ctor: '::',
 							_0: A5(
 								_MichaelCombs28$elm_mdl$Material_Button$render,
 								_user$project$Main$Mdl,
 								{
 									ctor: '::',
-									_0: 2,
+									_0: 0,
 									_1: {ctor: '[]'}
 								},
 								model_.mdl,
 								{
 									ctor: '::',
-									_0: _MichaelCombs28$elm_mdl$Material_Button$onClick(_user$project$Main$Submit),
-									_1: {ctor: '[]'}
+									_0: _MichaelCombs28$elm_mdl$Material_Button$onClick(_user$project$Main$ComponentInc),
+									_1: {
+										ctor: '::',
+										_0: A2(_MichaelCombs28$elm_mdl$Material_Options$css, 'margin', '0 24px'),
+										_1: {ctor: '[]'}
+									}
 								},
 								{
 									ctor: '::',
-									_0: _elm_lang$html$Html$text('Calculate'),
+									_0: _elm_lang$html$Html$text('Add Component'),
 									_1: {ctor: '[]'}
 								}),
 							_1: {
 								ctor: '::',
-								_0: _elm_lang$html$Html$text(
-									_elm_lang$core$Basics$toString(model_.gradeToPass)),
-								_1: {ctor: '[]'}
+								_0: A5(
+									_MichaelCombs28$elm_mdl$Material_Button$render,
+									_user$project$Main$Mdl,
+									{
+										ctor: '::',
+										_0: 1,
+										_1: {ctor: '[]'}
+									},
+									model_.mdl,
+									{
+										ctor: '::',
+										_0: _MichaelCombs28$elm_mdl$Material_Button$onClick(_user$project$Main$ComponentDec),
+										_1: {ctor: '[]'}
+									},
+									{
+										ctor: '::',
+										_0: _elm_lang$html$Html$text('Remove Component'),
+										_1: {ctor: '[]'}
+									}),
+								_1: {
+									ctor: '::',
+									_0: A5(
+										_MichaelCombs28$elm_mdl$Material_Button$render,
+										_user$project$Main$Mdl,
+										{
+											ctor: '::',
+											_0: 2,
+											_1: {ctor: '[]'}
+										},
+										model_.mdl,
+										{
+											ctor: '::',
+											_0: _MichaelCombs28$elm_mdl$Material_Button$onClick(_user$project$Main$Submit),
+											_1: {ctor: '[]'}
+										},
+										{
+											ctor: '::',
+											_0: _elm_lang$html$Html$text('Calculate'),
+											_1: {ctor: '[]'}
+										}),
+									_1: {
+										ctor: '::',
+										_0: _elm_lang$html$Html$text(
+											_elm_lang$core$Basics$toString(model_.gradeToPass)),
+										_1: {ctor: '[]'}
+									}
+								}
 							}
-						}
-					}
+						}),
+					_1: {ctor: '[]'}
 				}
 			}));
 };

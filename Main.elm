@@ -169,26 +169,29 @@ type alias Mdl =
 
 view : Model -> Html Msg
 view model_ =
-    div []
+    div [ class "main-div " ]
         [ renderComponents model_
-        , Button.render Mdl
-            [ 0 ]
-            model_.mdl
-            [ Button.onClick ComponentInc
-            , css "margin" "0 24px"
+        , div
+            [ class "buttons-div" ]
+            [ Button.render Mdl
+                [ 0 ]
+                model_.mdl
+                [ Button.onClick ComponentInc
+                , css "margin" "0 24px"
+                ]
+                [ text "Add Component" ]
+            , Button.render Mdl
+                [ 1 ]
+                model_.mdl
+                [ Button.onClick ComponentDec ]
+                [ text "Remove Component" ]
+            , Button.render Mdl
+                [ 2 ]
+                model_.mdl
+                [ Button.onClick Submit ]
+                [ text "Calculate" ]
+            , text (toString <| model_.gradeToPass)
             ]
-            [ text "Add Component" ]
-        , Button.render Mdl
-            [ 1 ]
-            model_.mdl
-            [ Button.onClick ComponentDec ]
-            [ text "Remove Component" ]
-        , Button.render Mdl
-            [ 2 ]
-            model_.mdl
-            [ Button.onClick Submit ]
-            [ text "Calculate" ]
-        , text (toString <| model_.gradeToPass)
         ]
         |> Material.Scheme.top
 
@@ -206,8 +209,8 @@ renderComponents model_ =
         in
             let
                 addIds tuple =
-                    div []
-                        [ Textfield.render Mdl [ 0 ] model_.mdl [ Textfield.onInput (ComponentWeight (toString <| (first tuple))) ], Textfield.render Mdl [ 0 ] model_.mdl [ Textfield.onInput (ComponentPercentage (toString <| (first tuple))) ] ]
+                    div [ class "wrapper" ]
+                        [ Textfield.render Mdl [ 0 ] model_.mdl [ Textfield.onInput (ComponentWeight (toString <| (first tuple))), Textfield.label "Component" ], Textfield.render Mdl [ 1 ] model_.mdl [ Textfield.onInput (ComponentPercentage (toString <| (first tuple))), Textfield.label "Percentage" ] ]
 
                 -- div
                 -- []
@@ -217,4 +220,4 @@ renderComponents model_ =
                     inputsWithIds =
                         List.map addIds tupledList
                 in
-                    div [] inputsWithIds
+                    div [ class "input-div" ] inputsWithIds

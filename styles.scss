@@ -1,0 +1,24 @@
+.main-div {
+    width: 960px;
+    margin: 0 auto;
+}
+
+.input-div {
+    width: 720px;
+    margin: 0 auto;
+}
+
+
+.wrapper {
+    width: 260px;
+    margin: 0 auto;
+    .mdl-textfield {
+        width: 100px !important;
+        margin: 0 10px !important;
+    }
+}
+
+.buttons-div {
+    width: 580px;
+    margin: 0 auto;
+}
