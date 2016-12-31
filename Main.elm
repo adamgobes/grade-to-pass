@@ -36,15 +36,17 @@ type alias Model =
     { numComponents : Int
     , components : Array Percentages
     , gradeToPass : Int
+    , gradeDesired : String
     , mdl : Material.Model
     }
 
 
 model : Model
 model =
-    { numComponents = 0
+    { numComponents = 1
     , components = empty
     , gradeToPass = 0
+    , gradeDesired = "C"
     , mdl = Material.model
     }
 
@@ -58,6 +60,7 @@ type Msg
     | ComponentDec
     | ComponentWeight String String
     | ComponentPercentage String String
+    | GradeChange String
     | Submit
     | Mdl (Material.Msg Msg)
 
@@ -70,6 +73,34 @@ convertRawFloat str =
 convertRawInt : String -> Int
 convertRawInt str =
     Result.withDefault 0 (String.toInt <| str)
+
+
+percentageFromLetter : String -> Int
+percentageFromLetter letter =
+    case letter of
+        "A" ->
+            85
+
+        "A-" ->
+            80
+
+        "B+" ->
+            75
+
+        "B" ->
+            70
+
+        "B-" ->
+            65
+
+        "C+" ->
+            60
+
+        "C" ->
+            55
+
+        _ ->
+            0
 
 
 calculate : Model -> Int
@@ -114,16 +145,19 @@ calculate model_ =
                     computeFinalWeight 0 0
             in
                 let
-                    pointsToPass =
-                        55 - totalWithoutFinal
+                    letterPercentage =
+                        percentageFromLetter model_.gradeDesired
                 in
-                    round ((toFloat pointsToPass / toFloat finalWeight) * 100)
+                    let
+                        pointsToPass =
+                            letterPercentage - totalWithoutFinal
+                    in
+                        round ((toFloat pointsToPass / toFloat finalWeight) * 100)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model_ =
     case msg of
-        -- increment numComponents integer and add empty record to components array
         ComponentInc ->
             ( { model_ | numComponents = model_.numComponents + 1, components = push { weight = 0, percentage = 0 } model_.components }, Cmd.none )
 
@@ -152,6 +186,9 @@ update msg model_ =
                 in
                     ( { model_ | components = set (convertRawInt id_) updatedRecord model_.components }, Cmd.none )
 
+        GradeChange grade ->
+            ( { model_ | gradeDesired = grade }, Cmd.none )
+
         Submit ->
             ( { model_ | gradeToPass = calculate model_ }, Cmd.none )
 
@@ -170,7 +207,7 @@ type alias Mdl =
 view : Model -> Html Msg
 view model_ =
     div [ class "main-div " ]
-        [ renderComponents model_
+        [ h1 [] [ text "Grade to Pass" ]
         , div
             [ class "buttons-div" ]
             [ Button.render Mdl
@@ -185,6 +222,8 @@ view model_ =
                 model_.mdl
                 [ Button.onClick ComponentDec ]
                 [ text "Remove Component" ]
+            , renderComponents model_
+            , Textfield.render Mdl [ 3 ] model_.mdl [ Textfield.onInput GradeChange, Textfield.label "Grade desired" ]
             , Button.render Mdl
                 [ 2 ]
                 model_.mdl
@@ -211,10 +250,6 @@ renderComponents model_ =
                 addIds tuple =
                     div [ class "wrapper" ]
                         [ Textfield.render Mdl [ 0 ] model_.mdl [ Textfield.onInput (ComponentWeight (toString <| (first tuple))), Textfield.label "Component" ], Textfield.render Mdl [ 1 ] model_.mdl [ Textfield.onInput (ComponentPercentage (toString <| (first tuple))), Textfield.label "Percentage" ] ]
-
-                -- div
-                -- []
-                -- [ input [ type_ "number", onInput (ComponentWeight (toString <| (first tuple))) ] [], input [ type_ "number", onInput (ComponentPercentage (toString <| (first tuple))) ] [] ]
             in
                 let
                     inputsWithIds =

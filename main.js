@@ -15016,6 +15016,27 @@ var _MichaelCombs28$elm_mdl$Material_Scheme$top = function (content) {
 	return A3(_MichaelCombs28$elm_mdl$Material_Scheme$topWithScheme, _MichaelCombs28$elm_mdl$Material_Color$Grey, _MichaelCombs28$elm_mdl$Material_Color$Grey, content);
 };
 
+var _user$project$Main$percentageFromLetter = function (letter) {
+	var _p0 = letter;
+	switch (_p0) {
+		case 'A':
+			return 85;
+		case 'A-':
+			return 80;
+		case 'B+':
+			return 75;
+		case 'B':
+			return 70;
+		case 'B-':
+			return 65;
+		case 'C+':
+			return 60;
+		case 'C':
+			return 55;
+		default:
+			return 0;
+	}
+};
 var _user$project$Main$calculate = function (model_) {
 	var computeFinalWeight = F2(
 		function (total, index) {
@@ -15042,17 +15063,18 @@ var _user$project$Main$calculate = function (model_) {
 						{weight: 0, percentage: 0},
 						A2(_elm_lang$core$Array$get, index, model_.components));
 					var newTotal = total + _elm_lang$core$Basics$round((currentComponent.weight / 100) * currentComponent.percentage);
-					var _v0 = newTotal,
-						_v1 = index + 1;
-					total = _v0;
-					index = _v1;
+					var _v1 = newTotal,
+						_v2 = index + 1;
+					total = _v1;
+					index = _v2;
 					continue withoutFinal;
 				}
 			}
 		});
 	var totalWithoutFinal = A2(withoutFinal, 0, 0);
 	var finalWeight = A2(computeFinalWeight, 0, 0);
-	var pointsToPass = 55 - totalWithoutFinal;
+	var letterPercentage = _user$project$Main$percentageFromLetter(model_.gradeDesired);
+	var pointsToPass = letterPercentage - totalWithoutFinal;
 	return _elm_lang$core$Basics$round(
 		(_elm_lang$core$Basics$toFloat(pointsToPass) / _elm_lang$core$Basics$toFloat(finalWeight)) * 100);
 };
@@ -15070,8 +15092,8 @@ var _user$project$Main$convertRawFloat = function (str) {
 };
 var _user$project$Main$update = F2(
 	function (msg, model_) {
-		var _p0 = msg;
-		switch (_p0.ctor) {
+		var _p1 = msg;
+		switch (_p1.ctor) {
 			case 'ComponentInc':
 				return {
 					ctor: '_Tuple2',
@@ -15098,34 +15120,7 @@ var _user$project$Main$update = F2(
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			case 'ComponentWeight':
-				var _p1 = _p0._0;
-				var record = A2(
-					_elm_lang$core$Maybe$withDefault,
-					{weight: 0, percentage: 0},
-					A2(
-						_elm_lang$core$Array$get,
-						_user$project$Main$convertRawInt(_p1),
-						model_.components));
-				var updatedRecord = _elm_lang$core$Native_Utils.update(
-					record,
-					{
-						weight: _user$project$Main$convertRawFloat(_p0._1)
-					});
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						model_,
-						{
-							components: A3(
-								_elm_lang$core$Array$set,
-								_user$project$Main$convertRawInt(_p1),
-								updatedRecord,
-								model_.components)
-						}),
-					_1: _elm_lang$core$Platform_Cmd$none
-				};
-			case 'ComponentPercentage':
-				var _p2 = _p0._0;
+				var _p2 = _p1._0;
 				var record = A2(
 					_elm_lang$core$Maybe$withDefault,
 					{weight: 0, percentage: 0},
@@ -15136,7 +15131,7 @@ var _user$project$Main$update = F2(
 				var updatedRecord = _elm_lang$core$Native_Utils.update(
 					record,
 					{
-						percentage: _user$project$Main$convertRawFloat(_p0._1)
+						weight: _user$project$Main$convertRawFloat(_p1._1)
 					});
 				return {
 					ctor: '_Tuple2',
@@ -15151,6 +15146,41 @@ var _user$project$Main$update = F2(
 						}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
+			case 'ComponentPercentage':
+				var _p3 = _p1._0;
+				var record = A2(
+					_elm_lang$core$Maybe$withDefault,
+					{weight: 0, percentage: 0},
+					A2(
+						_elm_lang$core$Array$get,
+						_user$project$Main$convertRawInt(_p3),
+						model_.components));
+				var updatedRecord = _elm_lang$core$Native_Utils.update(
+					record,
+					{
+						percentage: _user$project$Main$convertRawFloat(_p1._1)
+					});
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model_,
+						{
+							components: A3(
+								_elm_lang$core$Array$set,
+								_user$project$Main$convertRawInt(_p3),
+								updatedRecord,
+								model_.components)
+						}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			case 'GradeChange':
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model_,
+						{gradeDesired: _p1._0}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
 			case 'Submit':
 				return {
 					ctor: '_Tuple2',
@@ -15162,22 +15192,25 @@ var _user$project$Main$update = F2(
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			default:
-				return A2(_MichaelCombs28$elm_mdl$Material$update, _p0._0, model_);
+				return A2(_MichaelCombs28$elm_mdl$Material$update, _p1._0, model_);
 		}
 	});
-var _user$project$Main$model = {numComponents: 0, components: _elm_lang$core$Array$empty, gradeToPass: 0, mdl: _MichaelCombs28$elm_mdl$Material$model};
+var _user$project$Main$model = {numComponents: 1, components: _elm_lang$core$Array$empty, gradeToPass: 0, gradeDesired: 'C', mdl: _MichaelCombs28$elm_mdl$Material$model};
 var _user$project$Main$Percentages = F2(
 	function (a, b) {
 		return {weight: a, percentage: b};
 	});
-var _user$project$Main$Model = F4(
-	function (a, b, c, d) {
-		return {numComponents: a, components: b, gradeToPass: c, mdl: d};
+var _user$project$Main$Model = F5(
+	function (a, b, c, d, e) {
+		return {numComponents: a, components: b, gradeToPass: c, gradeDesired: d, mdl: e};
 	});
 var _user$project$Main$Mdl = function (a) {
 	return {ctor: 'Mdl', _0: a};
 };
 var _user$project$Main$Submit = {ctor: 'Submit'};
+var _user$project$Main$GradeChange = function (a) {
+	return {ctor: 'GradeChange', _0: a};
+};
 var _user$project$Main$ComponentPercentage = F2(
 	function (a, b) {
 		return {ctor: 'ComponentPercentage', _0: a, _1: b};
@@ -15301,7 +15334,14 @@ var _user$project$Main$view = function (model_) {
 			},
 			{
 				ctor: '::',
-				_0: _user$project$Main$renderComponents(model_),
+				_0: A2(
+					_elm_lang$html$Html$h1,
+					{ctor: '[]'},
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html$text('Grade to Pass'),
+						_1: {ctor: '[]'}
+					}),
 				_1: {
 					ctor: '::',
 					_0: A2(
@@ -15359,30 +15399,55 @@ var _user$project$Main$view = function (model_) {
 									}),
 								_1: {
 									ctor: '::',
-									_0: A5(
-										_MichaelCombs28$elm_mdl$Material_Button$render,
-										_user$project$Main$Mdl,
-										{
-											ctor: '::',
-											_0: 2,
-											_1: {ctor: '[]'}
-										},
-										model_.mdl,
-										{
-											ctor: '::',
-											_0: _MichaelCombs28$elm_mdl$Material_Button$onClick(_user$project$Main$Submit),
-											_1: {ctor: '[]'}
-										},
-										{
-											ctor: '::',
-											_0: _elm_lang$html$Html$text('Calculate'),
-											_1: {ctor: '[]'}
-										}),
+									_0: _user$project$Main$renderComponents(model_),
 									_1: {
 										ctor: '::',
-										_0: _elm_lang$html$Html$text(
-											_elm_lang$core$Basics$toString(model_.gradeToPass)),
-										_1: {ctor: '[]'}
+										_0: A4(
+											_MichaelCombs28$elm_mdl$Material_Textfield$render,
+											_user$project$Main$Mdl,
+											{
+												ctor: '::',
+												_0: 3,
+												_1: {ctor: '[]'}
+											},
+											model_.mdl,
+											{
+												ctor: '::',
+												_0: _MichaelCombs28$elm_mdl$Material_Textfield$onInput(_user$project$Main$GradeChange),
+												_1: {
+													ctor: '::',
+													_0: _MichaelCombs28$elm_mdl$Material_Textfield$label('Grade desired'),
+													_1: {ctor: '[]'}
+												}
+											}),
+										_1: {
+											ctor: '::',
+											_0: A5(
+												_MichaelCombs28$elm_mdl$Material_Button$render,
+												_user$project$Main$Mdl,
+												{
+													ctor: '::',
+													_0: 2,
+													_1: {ctor: '[]'}
+												},
+												model_.mdl,
+												{
+													ctor: '::',
+													_0: _MichaelCombs28$elm_mdl$Material_Button$onClick(_user$project$Main$Submit),
+													_1: {ctor: '[]'}
+												},
+												{
+													ctor: '::',
+													_0: _elm_lang$html$Html$text('Calculate'),
+													_1: {ctor: '[]'}
+												}),
+											_1: {
+												ctor: '::',
+												_0: _elm_lang$html$Html$text(
+													_elm_lang$core$Basics$toString(model_.gradeToPass)),
+												_1: {ctor: '[]'}
+											}
+										}
 									}
 								}
 							}
