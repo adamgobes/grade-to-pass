@@ -5,6 +5,7 @@ import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Array exposing (..)
 import Tuple exposing (..)
+import Random exposing (..)
 import Material
 import Material.Scheme
 import Material.Button as Button
@@ -44,7 +45,7 @@ type alias Model =
 model : Model
 model =
     { numComponents = 1
-    , components = empty
+    , components = fromList [ { weight = 0, percentage = 0 } ]
     , gradeToPass = 0
     , gradeDesired = "C"
     , mdl = Material.model
@@ -249,7 +250,7 @@ renderComponents model_ =
             let
                 addIds tuple =
                     div [ class "wrapper" ]
-                        [ Textfield.render Mdl [ 0 ] model_.mdl [ Textfield.onInput (ComponentWeight (toString <| (first tuple))), Textfield.label "Component" ], Textfield.render Mdl [ 1 ] model_.mdl [ Textfield.onInput (ComponentPercentage (toString <| (first tuple))), Textfield.label "Percentage" ] ]
+                        [ Textfield.render Mdl [ first tuple ] model_.mdl [ Textfield.onInput (ComponentWeight (toString <| (first tuple))), Textfield.label "Component" ], Textfield.render Mdl [ (first tuple) + 13 ] model_.mdl [ Textfield.onInput (ComponentPercentage (toString <| (first tuple))), Textfield.label "Percentage" ] ]
             in
                 let
                     inputsWithIds =
