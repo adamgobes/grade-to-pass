@@ -15195,7 +15195,18 @@ var _user$project$Main$update = F2(
 				return A2(_MichaelCombs28$elm_mdl$Material$update, _p1._0, model_);
 		}
 	});
-var _user$project$Main$model = {numComponents: 1, components: _elm_lang$core$Array$empty, gradeToPass: 0, gradeDesired: 'C', mdl: _MichaelCombs28$elm_mdl$Material$model};
+var _user$project$Main$model = {
+	numComponents: 1,
+	components: _elm_lang$core$Array$fromList(
+		{
+			ctor: '::',
+			_0: {weight: 0, percentage: 0},
+			_1: {ctor: '[]'}
+		}),
+	gradeToPass: 0,
+	gradeDesired: 'C',
+	mdl: _MichaelCombs28$elm_mdl$Material$model
+};
 var _user$project$Main$Percentages = F2(
 	function (a, b) {
 		return {weight: a, percentage: b};
